@@ -3,7 +3,7 @@ console.log("Welcome to the party!");
 main();
 
 function main() {
-    const canvas = document.querySelector("#coolCanvas");
+    const canvas = document.querySelector("#partyCanvas");
     const resolution = 20;
     const gridDimens = calculateGridDimensions(canvas, resolution);
     let grid = createGrid(gridDimens.width, gridDimens.height);
@@ -20,13 +20,21 @@ function main() {
 
     // grid = nextIteration(grid);
     // grid = nextIteration(grid);
-    renderGrid(canvas, grid, resolution, false);
 
+    const gradient = new Gradient();
+    gradient.addStop(new Color(250,78,213), 0);
+    gradient.addStop(new Color(0,54,191), 25);
+    gradient.addStop(new Color(46,217,176), 50);
+    gradient.addStop(new Color(0,56,43), 100);
+
+    renderGrid(canvas, grid, resolution, gradient, false);
+
+    // testGradient(canvas)
 
     const mInterval = setInterval(() => {
         grid = nextIteration(grid);
-        renderGrid(canvas, grid, resolution, false);
-    }, 100);
+        renderGrid(canvas, grid, resolution, gradient, false);
+    }, 50);
 }
 
 function animate() {
@@ -70,7 +78,7 @@ function resetGrid(grid) {
     }
 }
 
-function renderGrid(canvas, grid, resolution, showBorder = true) {
+function renderGrid(canvas, grid, resolution, gradient, showBorder = true) {
     const context = canvas.getContext("2d");
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -83,8 +91,8 @@ function renderGrid(canvas, grid, resolution, showBorder = true) {
                 if (grid[i][j] >= 1) {
                     context.fillStyle = "hsl(0, 0%, 100%)";
                 } else {
-                    const depthGradient = 50 + grid[i][j];
-                    context.fillStyle = "hsl(309, 100%, " + depthGradient + "%)";
+                    const depthGradient = -grid[i][j];
+                    context.fillStyle = gradient.getColor(depthGradient).toRGB();
                 }
                 context.fillRect(resolution * j, resolution * i, rectSize, rectSize);
             }
@@ -100,7 +108,7 @@ function nextIteration(grid, ignoreBoundary = true) {
             const nCount = neighborCount(grid, i, j, ignoreBoundary);
             nextGrid[i][j] = grid[i][j];
 
-            if (grid[i][j] < 0 && grid[i][j] > -50) {
+            if (grid[i][j] < 0 && grid[i][j] > -100) {
                 nextGrid[i][j] = grid[i][j] - 1;
             }
 
@@ -157,4 +165,33 @@ function neighborCount(grid, top, left, ignoreBoundary = true) {
     }
     // console.log("N Count", count);
     return count;
+}
+
+function testGradient(canvas) {
+    const context = canvas.getContext("2d");
+    context.fillStyle = "black";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.beginPath();
+    const arr = [];
+    const gradientSize = 60;
+    for (let i = 0 ; i < gradientSize ; i++) {
+        arr.push(0);
+    }
+    const resolution = 10;
+    const rectSize = resolution;
+    context.fillStyle = "white";
+
+    const gradient = new Gradient();
+    
+    gradient.addStop(new Color(255,0,0), 0);
+    gradient.addStop(new Color(0,255,0), 50);
+    gradient.addStop(new Color(0,0,255), 100);
+
+    console.log(gradient.getColor(50).toRGB());
+
+    for (let i = 0 ; i < arr.length ; i++) {
+        const per = (i * 100) / arr.length;
+        context.fillStyle = gradient.getColor(per).toRGB();
+        context.fillRect(resolution * i, resolution * 0, rectSize, rectSize);
+    }
 }
