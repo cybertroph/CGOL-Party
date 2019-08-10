@@ -1,11 +1,11 @@
 console.log("Welcome to the party!");
 
-// main();
-langton();
+main();
+// langton();
 
 function main() {
     const canvas = document.querySelector("#partyCanvas");
-    const resolution = 20;
+    const resolution = 4;
     const gridDimens = calculateGridDimensions(canvas, resolution);
     let grid = createGrid(gridDimens.width, gridDimens.height);
     // setGrid(grid);
@@ -21,26 +21,31 @@ function main() {
 
     // grid = nextIteration(grid);
     // grid = nextIteration(grid);
-
-    const ant = {
+    
+    let ant = {
         head: 'T', // Top, Right, Bottom, Left
-        x: 10,
-        y: 10
+        x: 50,
+        y: 50
     }
 
     const gradient = new Gradient();
     gradient.addStop(new Color(250,78,213), 0);
     gradient.addStop(new Color(0,54,191), 25);
     gradient.addStop(new Color(46,217,176), 50);
-    gradient.addStop(new Color(0,56,43), 100);
+    gradient.addStop(new Color(0,56,43), 90);
+    gradient.addStop(new Color(0,0,0), 100);
+
 
     renderGrid(canvas, grid, resolution, gradient, false);
     // testGradient(canvas)
 
-    const mInterval = setInterval(() => {
-        grid = nextIteration(grid);
+    const nextRender = function() {
+        // grid = nextIteration(grid);
+        iterateAnt(ant, grid, true);
         renderGrid(canvas, grid, resolution, gradient, false);
-    }, 50);
+    }
+
+    const mInterval = setInterval(nextRender, 50);
 }
 
 function langton() {
@@ -63,7 +68,6 @@ function langton() {
     const gradient = new Gradient();
     gradient.addStop(new Color(0,0,0), 0);
     gradient.addStop(new Color(0,0,0), 100);
-
 
     const btn = document.getElementById("nextItr");
     
@@ -222,7 +226,7 @@ function iterateAnt(ant, grid, ignoreBoundary = true) {
     ant.head = nextDir;
     if (isAlive) {
         // Kill the ant
-        grid[ant.y][ant.x] = -1;        
+        grid[ant.y][ant.x] = -1;       
     } else {
         // Set it alive
         grid[ant.y][ant.x] = 1;
