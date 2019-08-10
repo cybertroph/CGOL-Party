@@ -1,7 +1,6 @@
 console.log("Welcome to the party!");
 
 main();
-// langton();
 
 function main() {
     const canvas = document.querySelector("#partyCanvas");
@@ -40,45 +39,12 @@ function main() {
     // testGradient(canvas)
 
     const nextRender = function() {
-        // grid = nextIteration(grid);
+        grid = nextIteration(grid);
         iterateAnt(ant, grid, true);
         renderGrid(canvas, grid, resolution, gradient, false);
     }
 
     const mInterval = setInterval(nextRender, 50);
-}
-
-function langton() {
-    const canvas = document.querySelector("#partyCanvas");
-    const resolution = 2;
-    const gridDimens = calculateGridDimensions(canvas, resolution);
-    let grid = createGrid(gridDimens.width, gridDimens.height);
-
-    let ant = {
-        head: 'T', // Top, Right, Bottom, Left
-        x: 125,
-        y: 125
-    }
-    // console.log(ant);
-
-    const showBorder = false;
-
-    const context = canvas.getContext("2d");
-
-    const gradient = new Gradient();
-    gradient.addStop(new Color(0,0,0), 0);
-    gradient.addStop(new Color(0,0,0), 100);
-
-    const btn = document.getElementById("nextItr");
-    
-    const nextRender = function() {    
-        iterateAnt(ant, grid, true);
-        renderGrid(canvas, grid, resolution, gradient, false);
-    }
-
-    btn.onclick = nextRender;
-    
-    const mInterval = setInterval(nextRender, 1);
 }
 
 function animate() {
