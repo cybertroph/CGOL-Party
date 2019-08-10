@@ -1,6 +1,7 @@
 console.log("Welcome to the party!");
 
-main();
+// main();
+langton();
 
 function main() {
     const canvas = document.querySelector("#partyCanvas");
@@ -21,6 +22,12 @@ function main() {
     // grid = nextIteration(grid);
     // grid = nextIteration(grid);
 
+    const ant = {
+        head: 'T', // Top, Right, Bottom, Left
+        x: 10,
+        y: 10
+    }
+
     const gradient = new Gradient();
     gradient.addStop(new Color(250,78,213), 0);
     gradient.addStop(new Color(0,54,191), 25);
@@ -28,13 +35,46 @@ function main() {
     gradient.addStop(new Color(0,56,43), 100);
 
     renderGrid(canvas, grid, resolution, gradient, false);
-
     // testGradient(canvas)
 
     const mInterval = setInterval(() => {
         grid = nextIteration(grid);
         renderGrid(canvas, grid, resolution, gradient, false);
     }, 50);
+}
+
+function langton() {
+    const canvas = document.querySelector("#partyCanvas");
+    const resolution = 2;
+    const gridDimens = calculateGridDimensions(canvas, resolution);
+    let grid = createGrid(gridDimens.width, gridDimens.height);
+
+    let ant = {
+        head: 'T', // Top, Right, Bottom, Left
+        x: 125,
+        y: 125
+    }
+    // console.log(ant);
+
+    const showBorder = false;
+
+    const context = canvas.getContext("2d");
+
+    const gradient = new Gradient();
+    gradient.addStop(new Color(0,0,0), 0);
+    gradient.addStop(new Color(0,0,0), 100);
+
+
+    const btn = document.getElementById("nextItr");
+    
+    const nextRender = function() {    
+        iterateAnt(ant, grid, true);
+        renderGrid(canvas, grid, resolution, gradient, false);
+    }
+
+    btn.onclick = nextRender;
+    
+    const mInterval = setInterval(nextRender, 1);
 }
 
 function animate() {
@@ -125,6 +165,96 @@ function nextIteration(grid, ignoreBoundary = true) {
     }
     // console.table(nextGrid);
     return nextGrid;
+}
+
+function moveAnt(ant, grid, ignoreBoundary = true) {
+    const height = grid.length - 1;
+    const width = grid[0].length - 1;
+    
+    const newAnt = {
+        head: ant.head,
+        x: ant.x,
+        y: ant.y
+    };
+
+    switch (newAnt.head) {
+        case 'T': {
+            if (ant.y === 0) {
+                newAnt.y = height;
+            } else {
+                newAnt.y--;
+            }
+            break;
+        }
+        case 'R': {
+            if (ant.x === width) {
+                newAnt.x = 0;
+            } else {
+                newAnt.x++;
+            }
+            break;
+        }
+        case 'B': {
+            if (ant.y === height) {
+                newAnt.y = 0;
+            } else {
+                newAnt.y++;
+            }
+            break;
+        }
+        case 'L': {
+            if (ant.x === 0) {
+                newAnt.x = width;
+            } else {
+                newAnt.x--;
+            }
+            break;
+        }
+    }
+
+    return newAnt;
+}
+
+function iterateAnt(ant, grid, ignoreBoundary = true) {
+    const isAlive = (grid[ant.y][ant.x] > 0);
+    const nextDir = nextDirection(ant.head, isAlive);
+    // Turn direction
+    ant.head = nextDir;
+    if (isAlive) {
+        // Kill the ant
+        grid[ant.y][ant.x] = -1;        
+    } else {
+        // Set it alive
+        grid[ant.y][ant.x] = 1;
+    }
+    // Move Forward
+    const nAnt = moveAnt(ant, grid, true);
+    ant.x = nAnt.x;
+    ant.y = nAnt.y;
+}
+
+function nextDirection(head, clockwise = true) {
+    const dir = ['T', 'R', 'B', 'L'];
+    const index = dir.indexOf(head.toUpperCase());
+    if (index === -1) {
+        return dir[0];
+    }
+    // console.log(clockwise, dir[index]);
+    if (clockwise) {
+        // console.log("Going clockwise");
+        if (index === dir.length - 1) {
+            return dir[0];
+        } else {
+            return dir[index + 1]
+        }
+    } else {
+        // console.log("Going anti clockwise");
+        if (index === 0) {
+            return dir[dir.length - 1];
+        } else {
+            return dir[index - 1]
+        }
+    }
 }
 
 function neighborCount(grid, top, left, ignoreBoundary = true) {
