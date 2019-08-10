@@ -4,7 +4,7 @@ main();
 
 function main() {
     const canvas = document.querySelector("#partyCanvas");
-    const resolution = 4;
+    const resolution = 10;
     const gridDimens = calculateGridDimensions(canvas, resolution);
     let grid = createGrid(gridDimens.width, gridDimens.height);
     // setGrid(grid);
@@ -24,7 +24,7 @@ function main() {
     let ant = {
         head: 'T', // Top, Right, Bottom, Left
         x: 50,
-        y: 50
+        y: 40
     }
 
     const gradient = new Gradient();
@@ -36,7 +36,6 @@ function main() {
 
 
     renderGrid(canvas, grid, resolution, gradient, false);
-    // testGradient(canvas)
 
     const nextRender = function() {
         grid = nextIteration(grid);
