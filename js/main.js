@@ -4,7 +4,7 @@ main();
 
 function main() {
     const canvas = document.querySelector("#partyCanvas");
-    const resolution = 10;
+    const resolution = 40;
     const gridDimens = calculateGridDimensions(canvas, resolution);
     let grid = createGrid(gridDimens.width, gridDimens.height);
     // setGrid(grid);
@@ -23,8 +23,8 @@ function main() {
     
     let ant = {
         head: 'T', // Top, Right, Bottom, Left
-        x: 50,
-        y: 40
+        x: 12,
+        y: 5
     }
 
     const gradient = new Gradient();
@@ -43,11 +43,25 @@ function main() {
         renderGrid(canvas, grid, resolution, gradient, false);
     }
 
-    const mInterval = setInterval(nextRender, 50);
-}
+    let isAnimating = false;
+    // let mInterval = setInterval(nextRender, 200);
+    let mInterval;
 
-function animate() {
-    console.log("animating");
+    const toggleInterval = function() {
+        isAnimating = !isAnimating;
+        if (isAnimating) {
+            mInterval = setInterval(nextRender, 100);
+        } else {
+            clearInterval(mInterval);
+        }
+    }
+
+    const nextIrtBtn = document.getElementById("nextItr");
+    nextIrtBtn.onclick = nextRender;
+
+    const togglePlayBtn = document.getElementById("togglePlay");
+    togglePlayBtn.onclick = toggleInterval;
+
 }
 
 function calculateGridDimensions(canvas, resolution) {
