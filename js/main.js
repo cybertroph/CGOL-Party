@@ -34,8 +34,15 @@ function main() {
     gradient.addStop(new Color(0,56,43), 90);
     gradient.addStop(new Color(0,0,0), 100);
 
-
     renderGrid(canvas, grid, resolution, gradient, false);
+
+    // Add event listener
+    canvas.addEventListener('mousedown', function(e) {
+        const coords = getCursorPosition(canvas, e);
+        const gridCoords = translateCursorToGridCoords(canvas, coords, grid, resolution);
+        invertOnClick(grid, gridCoords);
+        renderGrid(canvas, grid, resolution, gradient, false);
+    })
 
     const nextRender = function() {
         grid = nextIteration(grid);
@@ -252,19 +259,19 @@ function neighborCount(grid, top, left, ignoreBoundary = true) {
             let x = (r + top);
             let y = (c + left);
             if (x < 0) {
-                if (!ignoreBoundary) break;
+                if (!ignoreBoundary) continue;
                 x = height;
             } 
             if (x > height) {
-                if (!ignoreBoundary) break;
+                if (!ignoreBoundary) continue;
                 x = 0;
             }
             if (y < 0) {
-                if (!ignoreBoundary) break;
+                if (!ignoreBoundary) continue;
                 y = width;
             }
             if (y > width) {
-                if (!ignoreBoundary) break;
+                if (!ignoreBoundary) continue;
                 y = 0;
             }
             // op += "[" + x + "," + y + "]" + grid[x][y] + "  ";
@@ -307,4 +314,33 @@ function testGradient(canvas) {
         context.fillStyle = gradient.getColor(per).toRGB();
         context.fillRect(resolution * i, resolution * 0, rectSize, rectSize);
     }
+}
+
+function getCursorPosition(canvas, event) {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    return {
+        x: x,
+        y: y
+    };
+}
+
+/**
+ * Translates cursor coordinates to grid coordinates
+ */
+function translateCursorToGridCoords(canvas, coords, grid, resolution) {
+    return {
+        x: parseInt((coords.x / resolution), 10),
+        y: parseInt((coords.y / resolution), 10)
+    }
+}
+
+function invertOnClick(grid, coords) {
+    const isAlive = (grid[coords.y][coords.x] > 0);
+    if (isAlive) {
+        grid[coords.y][coords.x] = 0;
+    } else {
+        grid[coords.y][coords.x] = 1;
+    }   
 }
