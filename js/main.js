@@ -1,6 +1,18 @@
 console.log("Welcome to the party!");
 
 main();
+// test();
+
+function test() {
+    const inputText = "bob$2bo$3o!";
+    console.log(decodeRLE("12b6o3b"));
+    console.log("Is text valid", isRLETextValid(inputText));
+    console.table(textToMatrix(inputText));
+    console.log(matrixToText([[0,1,0], [0,0,1], [1,1,1]]));
+    console.log(encodeRLE("bbbbbbbbbbbboooooobbb"));
+    console.log("\n");
+    console.log(encodeRLE("bobobobobo"));
+}
 
 function main() {
     const canvas = document.querySelector("#partyCanvas");
@@ -68,6 +80,11 @@ function main() {
 
     const togglePlayBtn = document.getElementById("togglePlay");
     togglePlayBtn.onclick = toggleInterval;
+
+    const printState = document.getElementById("printState");
+    printState.onclick = function() {
+        console.log(matrixToText(grid));
+    };
 
 }
 
