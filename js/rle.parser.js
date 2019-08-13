@@ -3,7 +3,6 @@ function textToMatrix(text) {
     if (text.charAt(text.length - 1) === '!') {
         text = text.substring(0, text.length - 1);
     }
-    console.log('text', text);
     const splits = text.split("$");
     const cols = [];
     const maxWidth = fillWithMaxWidth();

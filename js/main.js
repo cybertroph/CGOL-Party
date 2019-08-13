@@ -48,11 +48,15 @@ function main() {
 
     renderGrid(canvas, grid, resolution, gradient, false);
 
+    const inputText = "bob$2bo$3o!";
+    const inputMatrix = textToMatrix(inputText);
+
     // Add event listener
     canvas.addEventListener('mousedown', function(e) {
         const coords = getCursorPosition(canvas, e);
         const gridCoords = translateCursorToGridCoords(canvas, coords, grid, resolution);
-        invertOnClick(grid, gridCoords);
+        // invertOnClick(grid, gridCoords);
+        addUserMatrix(grid, inputMatrix, gridCoords, false);
         renderGrid(canvas, grid, resolution, gradient, false);
     })
 
@@ -360,4 +364,26 @@ function invertOnClick(grid, coords) {
     } else {
         grid[coords.y][coords.x] = 1;
     }   
+}
+
+function addUserMatrix(grid, inputMatrix, coords, invert = false) {
+    for (let i = 0 ; i < inputMatrix.length ; i++) {
+        const x = (coords.x + i) % grid[0].length;
+        for (let j = 0 ; j < inputMatrix[i].length ; j++) {            
+            const y = (coords.y + j) % grid.length;
+            if (invert) {
+                if (inputMatrix[j][i] > 0) {
+                    if (grid[y][x] > 0 ) {
+                        grid[y][x] = 0;
+                    } else {
+                        grid[y][x] = inputMatrix[j][i];
+                    }
+                }
+            } else {
+                if (inputMatrix[j][i] > 0) {
+                    grid[y][x] = inputMatrix[j][i];
+                }
+            }
+        }
+    }
 }
