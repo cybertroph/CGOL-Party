@@ -5,6 +5,7 @@ main();
 
 function test() {
     const inputText = "bob$2bo$3o!";
+    // console.log(patterns)
     // console.log(decodeRLE("12b6o3b"));
     // console.log("Is text valid", isRLETextValid(inputText));
     // console.table(textToMatrix(inputText));
@@ -17,7 +18,7 @@ function test() {
 
 function main() {
     const canvas = document.querySelector("#partyCanvas");
-    const resolution = 2;
+    const resolution = 4;
     const gridDimens = calculateGridDimensions(canvas, resolution);
     let grid = createGrid(gridDimens.width, gridDimens.height);
     // setGrid(grid);
@@ -50,7 +51,8 @@ function main() {
     renderGrid(canvas, grid, resolution, gradient, false);
 
     const inputText = "bob$2bo$3o!";
-    let inputMatrix = textToMatrix(inputText);
+    // let inputMatrix = textToMatrix(inputText);
+    let inputMatrix = textToMatrix(patterns.spaceFiller_1);
 
     // Add event listener
     canvas.addEventListener('mousedown', function(e) {
