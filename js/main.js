@@ -5,18 +5,19 @@ main();
 
 function test() {
     const inputText = "bob$2bo$3o!";
-    console.log(decodeRLE("12b6o3b"));
-    console.log("Is text valid", isRLETextValid(inputText));
-    console.table(textToMatrix(inputText));
-    console.log(matrixToText([[0,1,0], [0,0,1], [1,1,1]]));
-    console.log(encodeRLE("bbbbbbbbbbbboooooobbb"));
-    console.log("\n");
-    console.log(encodeRLE("bobobobobo"));
+    // console.log(decodeRLE("12b6o3b"));
+    // console.log("Is text valid", isRLETextValid(inputText));
+    // console.table(textToMatrix(inputText));
+    // console.log(matrixToText([[0,1,0], [0,0,1], [1,1,1]]));
+    // console.log(encodeRLE("bbbbbbbbbbbboooooobbb"));
+    // console.log("\n");
+    // console.log(encodeRLE("bobobobobo"));
+    // console.log(decodeRLE("10b2o2b2$"));
 }
 
 function main() {
     const canvas = document.querySelector("#partyCanvas");
-    const resolution = 40;
+    const resolution = 2;
     const gridDimens = calculateGridDimensions(canvas, resolution);
     let grid = createGrid(gridDimens.width, gridDimens.height);
     // setGrid(grid);
@@ -49,7 +50,7 @@ function main() {
     renderGrid(canvas, grid, resolution, gradient, false);
 
     const inputText = "bob$2bo$3o!";
-    const inputMatrix = textToMatrix(inputText);
+    let inputMatrix = textToMatrix(inputText);
 
     // Add event listener
     canvas.addEventListener('mousedown', function(e) {
@@ -89,6 +90,14 @@ function main() {
     printState.onclick = function() {
         console.log(matrixToText(grid));
     };
+
+    const patternInput = document.getElementById("patternInput");
+    const parsePattern = document.getElementById("parsePattern");
+    parsePattern.onclick = function() {
+        const pattern = patternInput.value;
+        inputMatrix = textToMatrix(pattern);
+        // console.table(inputMatrix);
+    }
 
 }
 
@@ -368,20 +377,20 @@ function invertOnClick(grid, coords) {
 
 function addUserMatrix(grid, inputMatrix, coords, invert = false) {
     for (let i = 0 ; i < inputMatrix.length ; i++) {
-        const x = (coords.x + i) % grid[0].length;
+        const y = (coords.y + i) % grid.length;
         for (let j = 0 ; j < inputMatrix[i].length ; j++) {            
-            const y = (coords.y + j) % grid.length;
+            const x = (coords.x + j) % grid[0].length;
             if (invert) {
-                if (inputMatrix[j][i] > 0) {
+                if (inputMatrix[i][j] > 0) {
                     if (grid[y][x] > 0 ) {
                         grid[y][x] = 0;
                     } else {
-                        grid[y][x] = inputMatrix[j][i];
+                        grid[y][x] = inputMatrix[i][j];
                     }
                 }
             } else {
-                if (inputMatrix[j][i] > 0) {
-                    grid[y][x] = inputMatrix[j][i];
+                if (inputMatrix[i][j] > 0) {
+                    grid[y][x] = inputMatrix[i][j];
                 }
             }
         }

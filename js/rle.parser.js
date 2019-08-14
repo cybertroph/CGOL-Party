@@ -1,28 +1,18 @@
 function textToMatrix(text) {
+    text = text.replace(/(\r\n|\n|\r)/gm, "");
     text = text.toLowerCase();
     if (text.charAt(text.length - 1) === '!') {
         text = text.substring(0, text.length - 1);
     }
-    const splits = text.split("$");
+    const decodedText = decodeRLE(text);
+    const splits = decodedText.split("$");
     const cols = [];
-    const maxWidth = fillWithMaxWidth();
-    
-    function fillWithMaxWidth() {
-        let maxW = 0;
-        for (let i = 0 ; i < splits.length ; i++) {
-            const size = splits[i].length;
-            if (size > maxW) {
-                maxW = size;
-            }
-        }        
-        for (let i = 0 ; i < splits.length ; i++) {
-            const row = [];
-            for (let j = 0 ; j < maxW ; j++) {
-                row.push(0);    
-            }
-            cols.push(row);
+
+    let maxWidth = 0;
+    for (let i = 0 ; i < splits.length ; i++) {
+        if (splits.length > maxWidth) {
+            maxWidth = splits.length+1;
         }
-        return maxW;
     }
 
     for (let i = 0 ; i < splits.length ; i++) {
@@ -30,7 +20,7 @@ function textToMatrix(text) {
     }
 
     function fillRow(str) {
-        let decoded = decodeRLE(str);
+        let decoded = str;
         decoded = decoded.replace(/b/g, 0);
         decoded = decoded.replace(/o/g, 1);
         
