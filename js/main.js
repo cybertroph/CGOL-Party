@@ -18,9 +18,11 @@ function test() {
 
 function main() {
     const canvas = document.querySelector("#partyCanvas");
-    const resolution = 4;
+    fillToParent(canvas, "canvasWrapper");
+    const resolution = 5;
     const gridDimens = calculateGridDimensions(canvas, resolution);
     let grid = createGrid(gridDimens.width, gridDimens.height);
+    console.log(canvas.width, canvas.height);
     // setGrid(grid);
     grid[0][1] = 1;
     grid[1][2] = 1;
@@ -142,7 +144,7 @@ function resetGrid(grid) {
 
 function renderGrid(canvas, grid, resolution, gradient, showBorder = true) {
     const context = canvas.getContext("2d");
-    context.fillStyle = "black";
+    context.fillStyle = "rgba(0,0,0,0)";
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.beginPath();
     const rectSize = resolution + (showBorder ? -1 : 0);
