@@ -92,11 +92,13 @@ class Color {
     red = 0;
     green = 0;
     blue = 0;
+    alpha = 1;
 
-    constructor(red, green, blue) {      
+    constructor(red, green, blue, alpha = 1) { 
         this.red = this.limit(red);
         this.green = this.limit(green);
         this.blue = this.limit(blue);
+        this.alpha = this.limitAlpha(alpha);
     }
 
     limit(color) {
@@ -109,12 +111,22 @@ class Color {
         return color;
     }
 
+    limitAlpha(alpha) {
+        if (alpha < 0) {
+            return 0;
+        }
+        if (alpha > 1) {
+            return 1;
+        }
+        return alpha;
+    }
+
     equals(color) {
-        return this.red === color.red && this.green === color.green && this.blue === color.blue;
+        return this.red === color.red && this.green === color.green && this.blue === color.blue && this.alpha === color.alpha;
     }
 
     toRGB() {
-        return 'rgb(' + this.red + ',' + this.green + ',' + this.blue + ')';
+        return 'rgba(' + this.red + ',' + this.green + ',' + this.blue + ',' + this.alpha + ')';
     }
 
 }
