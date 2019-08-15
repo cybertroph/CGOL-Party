@@ -2,6 +2,7 @@ console.log("Welcome to the party!");
 
 main();
 // test();
+// testGradientTwo();
 
 function test() {
     const inputText = "bob$2bo$3o!";
@@ -22,7 +23,6 @@ function main() {
     const resolution = 5;
     const gridDimens = calculateGridDimensions(canvas, resolution);
     let grid = createGrid(gridDimens.width, gridDimens.height);
-    console.log(canvas.width, canvas.height);
     // setGrid(grid);
     grid[0][1] = 1;
     grid[1][2] = 1;
@@ -48,7 +48,7 @@ function main() {
     gradient.addStop(new Color(0,54,191), 25);
     gradient.addStop(new Color(46,217,176), 50);
     gradient.addStop(new Color(0,56,43), 90);
-    gradient.addStop(new Color(0,0,0), 100);
+    gradient.addStop(new Color(0,0,0,0), 100);
 
     renderGrid(canvas, grid, resolution, gradient, false);
 
@@ -144,6 +144,7 @@ function resetGrid(grid) {
 
 function renderGrid(canvas, grid, resolution, gradient, showBorder = true) {
     const context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
     context.fillStyle = "rgba(0,0,0,0)";
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.beginPath();
@@ -347,6 +348,44 @@ function testGradient(canvas) {
         const per = (i * 100) / arr.length;
         context.fillStyle = gradient.getColor(per).toRGB();
         context.fillRect(resolution * i, resolution * 0, rectSize, rectSize);
+    }
+}
+
+function testGradientTwo() {
+    console.log("here");
+
+    const canvas = document.querySelector("#partyCanvas");
+    fillToParent(canvas, "canvasWrapper");
+    const resolution = 50;
+
+    const context = canvas.getContext("2d");
+    context.fillStyle = "rgba(0,0,0,0)";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.beginPath();
+    const rectSize = resolution + (true ? -1 : 0);
+
+    // const gradient = new Gradient();
+    // gradient.addStop(new Color(255, 0, 0), 0);
+    // gradient.addStop(new Color(0, 0, 255, 0), 100);
+
+    const gradient = new Gradient();
+    gradient.addStop(new Color(250,78,213), 0);
+    gradient.addStop(new Color(0,0,0,0), 25);
+    // gradient.addStop(new Color(0,54,191,0), 25);
+    gradient.addStop(new Color(46,217,176,0), 50);
+    gradient.addStop(new Color(0,56,43,0), 90);
+    gradient.addStop(new Color(0,0,0,0), 100);
+
+    const arr = [];
+    const rectCount = 10;
+    for (let i = 0 ; i < rectCount ; i++) {
+        arr.push(0);
+    }
+    
+    for (let i = 0 ; i <= arr.length ; i++) {
+        const depthGradient = (i / arr.length) * 100;
+        context.fillStyle = gradient.getColor(depthGradient).toRGB();
+        context.fillRect(resolution * i, 0, rectSize, rectSize);
     }
 }
 

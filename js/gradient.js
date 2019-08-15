@@ -61,6 +61,7 @@ class Gradient {
         res.red = parseInt(startColor.red + per * (endColor.red - startColor.red), 10);
         res.green = parseInt(startColor.green + per * (endColor.green - startColor.green), 10);
         res.blue = parseInt(startColor.blue + per * (endColor.blue - startColor.blue), 10);
+        res.alpha = startColor.alpha + per * (endColor.alpha - startColor.alpha);
         return res;
     }
 
@@ -88,17 +89,18 @@ class Gradient {
 
 }
 
-class Color {    
+class Color {
     red = 0;
     green = 0;
     blue = 0;
     alpha = 1;
 
-    constructor(red, green, blue, alpha = 1) { 
+    constructor(red, green, blue, alpha = 1) {
         this.red = this.limit(red);
         this.green = this.limit(green);
         this.blue = this.limit(blue);
         this.alpha = this.limitAlpha(alpha);
+        // console.log(this.alpha);
     }
 
     limit(color) {
